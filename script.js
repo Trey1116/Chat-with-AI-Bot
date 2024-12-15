@@ -21,26 +21,26 @@ document.getElementById("sendButton").addEventListener("click", async () => {
 
     try {
         // Make API call to Grok API
-        const response = await fetch("https://api.x.ai/v1", {
+        const response = await fetch("https://api.xai.com/v1/grok", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${apiKey}`,
             },
             body: JSON.stringify({
-                model: "grok-beta",
-                prompt: userMessage,
+                model: "grok-beta", // Using the provided model
+                prompt: userMessage, // Sending user message as prompt
             }),
         });
 
         if (!response.ok) {
             const errorData = await response.json();
-            alert(`Error: ${errorData.error.message}`);
+            alert(`Error: ${errorData.message || "Something went wrong"}`);
             return;
         }
 
         const data = await response.json();
-        const botReply = data.reply; // Assuming the response has a 'reply' field
+        const botReply = data.reply || "No response from the bot."; // Check the response structure
 
         // Display bot's response
         const botPara = document.createElement("p");
