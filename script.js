@@ -20,22 +20,38 @@ document.getElementById("sendButton").addEventListener("click", async () => {
     chatWindow.appendChild(userPara);
 
     try {
-        const response = await fetch("http://localhost:3000/chat", {
+        // Make API call to Grok API
+        const response = await fetch("https://api.xai.com/v1/grok", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ apiKey, message: userMessage }),
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`,
+            },
+            body: JSON.stringify({
+                model: "grok-beta",
+                prompt: userMessage,
+            }),
         });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            alert(`Error: ${errorData.error.message}`);
+            return;
+        }
+
         const data = await response.json();
+        const botReply = data.reply; // Assuming the response has a 'reply' field
 
         // Display bot's response
         const botPara = document.createElement("p");
         botPara.classList.add("bot");
-        botPara.textContent = `Bot: ${data.reply}`;
+        botPara.textContent = `Bot: ${botReply}`;
         chatWindow.appendChild(botPara);
 
         chatWindow.scrollTop = chatWindow.scrollHeight; // Auto-scroll to latest message
     } catch (error) {
-        alert("Error communicating with the bot.");
+        alert("Error communicating with the bot. Check your network or API key.");
+        console.error(error);
     }
 
     document.getElementById("userMessage").value = ""; // Clear input field
