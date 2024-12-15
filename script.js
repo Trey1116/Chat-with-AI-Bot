@@ -21,7 +21,7 @@ document.getElementById("sendButton").addEventListener("click", async () => {
 
     try {
         // Make API call to Grok API
-        const response = await fetch("https://api.xai.com/v1/grok", {
+        const response = await fetch("https://api.x.ai/v1", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
